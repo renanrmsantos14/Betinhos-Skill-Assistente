@@ -46,6 +46,7 @@ As regras invioláveis abaixo valem para todos os módulos.
 
 ### 1. Entender o pedido
 Extraia: cliente, solicitante, passageiro(s) e telefone, data e hora de saída, endereço de saída (por passageiro, se mais de um), destino, tipo de veículo, observações para a operação, horário previsto de retorno (se houver).
+Saída no Aeroporto de Guarulhos → dados do voo são obrigatórios; se faltarem, inclua no pedido de informações (e, se o usuário quiser seguir sem, grave `Dados do voo pendentes`). Guarulhos como destino → não peça voo. Regras de onde gravar cada informação (voo, preferências, pendências): `references/campos.md` → "Observações e dados de voo".
 Pergunte **numa única mensagem** só o que faltar. Data relativa ("amanhã", "sexta") → converta e mostre a data absoluta (dd/mm/aaaa). Data/hora de saída **no passado** → avise e pergunte se a data está certa antes de seguir.
 
 **Apelidos de endereço por cliente:**
@@ -74,6 +75,7 @@ Mostre exatamente o que será gravado:
 • Destino: …        • Trajeto: Origem / Destino
 • Veículo: …        • Tipo de serviço: …
 • Obs. operação: …
+• Obs. interna: …
 ```
 Só prossiga com "sim", "confirma", "pode agendar" ou equivalente claro.
 
