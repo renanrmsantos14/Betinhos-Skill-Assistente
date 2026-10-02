@@ -37,13 +37,16 @@ Metadata conferida em DEV em 02/10/2026.
    1. **Histórico comparável** — composições com total > 0 do mesmo cliente, mesmo `cr40f_tipodeveiculo` e trajeto equivalente (consulta abaixo). Prefira as mais recentes e as Concluídas.
    2. **Tabela de tarifas** — `references/tarifas.md`, só para o cliente correspondente.
    3. Nada encontrado → deixe o item em branco e peça o valor.
+
+   **Pedágio e estacionamento de aeroporto já estão dentro do preço** (histórico ou tabela): não sugira `new_valorpedagios`, e só preencha `new_valorestacionamento` para estacionamento fora de aeroporto (shopping, feira, exposição) pedido pelo cliente. Só grave pedágio se o usuário ditar.
+
+   Cliente sem tabela (particular e demais): o preço vem do histórico. Se houver outro serviço no mesmo dia e região que permita encaixe, **aponte** isso ao usuário — o desconto é decisão dele.
 3. Mostre o resumo e peça confirmação:
 ```
 *Composição OS-xxxx* — confirma?
 • Locação: R$ 620,49 — histórico OS-9120 (12/09/2026)
-• Pedágios: R$ 38,00 — histórico OS-9120
-• Hora parada: R$ 48,88 — tarifa de tabela (planilha 2023)
-• Total estimado: R$ 707,37 (o sistema recalcula)
+• Hora parada: R$ 48,88 — tarifa de tabela
+• Total estimado: R$ 669,37 (o sistema recalcula)
 ```
 4. `update_record` em `cr40f_composicaodeprecos` só com os itens confirmados (número, sem "R$").
 5. Releia a composição e informe o `new_valortotal` calculado pelo sistema. Se divergir da soma, avise.
@@ -52,9 +55,9 @@ Valor de histórico é **preço histórico**; de `tarifas.md` é **tarifa de tab
 
 ## Mono ou bilíngue (Johnson e Kenvue)
 A tarifa muda se o passageiro é visitante estrangeiro. Decida nesta ordem:
-1. **Histórico do passageiro**: valor já cobrado dele no mesmo trajeto.
-2. **Cadastro**: `cr40f_preferenciasdopassageiro`, `cr40f_classificacao` e DDI do telefone (diferente de +55 indica visitante).
-3. **Nome**: apenas indício.
+1. **Cadastro do passageiro**: `cr40f_preferenciasdopassageiro`, `cr40f_classificacao` e DDI do telefone (diferente de +55 indica visitante).
+2. **Últimos pedidos do passageiro**: valor já cobrado dele no mesmo trajeto (mono ou bilíngue).
+3. **Nome**: apenas indício, se parece estrangeiro ou não.
 
 Sinais concordam → assuma e mostre a premissa no resumo ("Tarifa bilíngue: telefone +1"). Sinais conflitam ou só existe o nome → **pergunte** antes de compor.
 
