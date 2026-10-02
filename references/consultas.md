@@ -53,7 +53,16 @@ SELECT cr40f_reservadeveculosid, cr40f_id, cr40f_idnovo, cr40f_statusname, cr40f
 FROM cr40f_reservadeveculos
 WHERE cr40f_iachaveidempotencia = '<chave>'
 ```
-OK somente se `cr40f_id` começar com `OS-` seguido de números.
+OK somente se `cr40f_id` começar com `OS-` seguido de números. `cr40f_passageirosetelefonedecontato` é preenchido automaticamente pouco depois dos vínculos; se ainda vier vazio, valide os passageiros pela consulta abaixo.
+
+Vínculos da reserva (antes de criar cada vínculo e na conferência):
+```sql
+SELECT TOP 20 cr40f_servicosporpassageiroid, cr40f_id, cr40f_ordemdeselecao, cr40f_bancodedados,
+       cr40f_bancodedadosname, new_enderecodesaidacolunaservicosporpassageiro
+FROM cr40f_servicosporpassageiro
+WHERE cr40f_geral = '<guid-reserva>' AND statecode = 0
+ORDER BY cr40f_ordemdeselecao
+```
 
 ## Agenda
 

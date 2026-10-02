@@ -9,19 +9,19 @@ Metadata conferida em DEV e PROD em 01/10/2026.
 | `cr40f_idnovo` | Numeração automática `{SEQNUM:5}` |
 | `cr40f_statusdefaturamento`, `cr40f_cotao`, `cr40f_valor_a_receber`, `cr40f_financeiro` | Financeiro, fora do agendamento |
 | `cr40f_motorista`, `cr40f_veiculo`, `new_veiculoreal` | Só com pedido explícito (programação é da operação) |
+| `cr40f_passageiro1`…`cr40f_passageiro4` | Legado. Passageiro entra **apenas** por `cr40f_servicosporpassageiro` |
+| `cr40f_passageirosetelefonedecontato` | Campo VIEW, recalculado automaticamente a partir de `cr40f_servicosporpassageiro`. Somente leitura |
 
 ## Payload de criação
 | Campo | Tipo | Conteúdo | Exemplo |
 |---|---|---|---|
 | `cr40f_cliente` | lookup `cr40f_clientes1` | GUID do cliente | `{"relatedTable":"cr40f_clientes1","recordId":"<guid>"}` |
 | `cr40f_solicitante` | lookup `cr40f_bancodedados` | GUID de quem pediu | idem, `relatedTable: cr40f_bancodedados` |
-| `cr40f_passageiro1`…`cr40f_passageiro4` | lookup `cr40f_bancodedados` | só se o passageiro existir no cadastro | |
 | `cr40f_dataehorriodesada` | data/hora | **UTC**: hora de Brasília + 3h, sufixo `Z` | 07:30 em Brasília → `2026-10-02T10:30:00Z` |
 | `cr40f_horrioprevistoderetorno` | data/hora | opcional, mesma regra | |
 | `cr40f_endereodesada` | texto | uma linha por passageiro: `1. Nome - endereço` | `1. Gabriela - Hotel Radisson Vila Olímpia` |
 | `cr40f_destino` | texto | destino; vários → `1 - …\n2 - …` | `Aerop. Guarulhos` |
 | `cr40f_trajeto` | texto curto | `Origem / Destino` | `SJCampos / Aerop. Guarulhos` |
-| `cr40f_passageirosetelefonedecontato` | texto | `Nome - telefone` por linha | `Gabriela Elgorriaga - +54 9 11 3900-9393` |
 | `cr40f_tipodeveiculo` | choice | ver tabela | `202410001` |
 | `cr40f_tipodoservico` | choice | ver tabela | `202410009` |
 | `cr40f_status` | choice | **`202410004` (Solicitado)**; outro status só com pedido explícito | |
@@ -31,6 +31,19 @@ Metadata conferida em DEV e PROD em 01/10/2026.
 | `cr40f_iachaveidempotencia` | texto (180) | chave única do pedido | `claude:20261002:0730:gabriela:kq7m` |
 | `cr40f_formadepagamento` | choice | só se informado | |
 | `cr40f_cr` | texto | centro de custo, só se informado | |
+
+## Payload do vínculo de passageiro (`cr40f_servicosporpassageiro`)
+
+Única forma de inserir passageiro. Um registro por passageiro, criado depois da reserva. Metadata conferida em DEV e PROD em 02/10/2026.
+
+| Campo | Tipo | Conteúdo | Exemplo |
+|---|---|---|---|
+| `cr40f_geral` | lookup `cr40f_reservadeveculos` | GUID da reserva criada | `{"relatedTable":"cr40f_reservadeveculos","recordId":"<guid>"}` |
+| `cr40f_bancodedados` | lookup `cr40f_bancodedados` | GUID do passageiro no cadastro (obrigatório) | `{"relatedTable":"cr40f_bancodedados","recordId":"<guid>"}` |
+| `cr40f_ordemdeselecao` | inteiro | ordem de embarque: 1, 2, 3… | `1` |
+| `new_enderecodesaidacolunaservicosporpassageiro` | texto | endereço de saída desse passageiro | `Hotel Radisson Vila Olímpia` |
+
+**Não envie `cr40f_id`** do vínculo: é numeração automática (ex.: `37811`).
 
 ## Choices
 
