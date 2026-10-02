@@ -8,7 +8,9 @@ Metadata conferida em DEV e PROD em 01/10/2026.
 | `cr40f_id` | Numeração automática `OS-{SEQNUM}`; nome principal e chave alternativa. **Fica fora do payload mesmo que a ferramenta peça o nome principal** — qualquer valor fora de `OS-<n>` é removido pelo plugin `Betinhos.AutoNumberGuard` antes de gravar |
 | `cr40f_idnovo` | Numeração automática `{SEQNUM:5}` |
 | `cr40f_statusdefaturamento`, `cr40f_cotao`, `cr40f_valor_a_receber`, `cr40f_financeiro` | Financeiro, fora do agendamento |
-| `cr40f_motorista`, `cr40f_veiculo`, `new_veiculoreal` | Só com pedido explícito (programação é da operação) |
+| `cr40f_motorista`, `cr40f_veiculo` | Fora do agendamento. Só com pedido explícito, pelo fluxo de `programacao.md` |
+| `new_veiculoreal` | Preenchido pelo rastreador. Nunca grave |
+| `new_foiprogramado` | Só no fluxo "Disparar" de `programacao.md` |
 | `cr40f_passageiro1`…`cr40f_passageiro4` | Legado. Passageiro entra **apenas** por `cr40f_servicosporpassageiro` |
 | `cr40f_passageirosetelefonedecontato` | Campo VIEW, recalculado automaticamente a partir de `cr40f_servicosporpassageiro`. Somente leitura |
 
@@ -27,7 +29,7 @@ Metadata conferida em DEV e PROD em 01/10/2026.
 | `cr40f_status` | choice | **`202410004` (Solicitado)**; outro status só com pedido explícito | |
 | `new_categoriadoitem` | choice | **sempre `100000000` (Serviço)** | |
 | `cr40f_obsdeoperao` | texto | instruções para a operação/motorista | |
-| `cr40f_observaointerna` | texto | `Criado via Claude (skill agendamento-betinhos)` + observações internas | |
+| `cr40f_observaointerna` | texto | `Criado via Claude (skill assistente-betinhos)` + observações internas | |
 | `cr40f_iachaveidempotencia` | texto (180) | chave única do pedido | `claude:20261002:0730:gabriela:kq7m` |
 | `cr40f_formadepagamento` | choice | só se informado | |
 | `cr40f_cr` | texto | centro de custo, só se informado | |
