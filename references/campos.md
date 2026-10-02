@@ -21,15 +21,15 @@ Metadata conferida em DEV e PROD em 01/10/2026.
 | `cr40f_solicitante` | lookup `cr40f_bancodedados` | GUID de quem pediu | idem, `relatedTable: cr40f_bancodedados` |
 | `cr40f_dataehorriodesada` | data/hora | **UTC**: hora de Brasília + 3h, sufixo `Z` | 07:30 em Brasília → `2026-10-02T10:30:00Z` |
 | `cr40f_horrioprevistoderetorno` | data/hora | opcional, mesma regra | |
-| `cr40f_endereodesada` | texto | uma linha por passageiro: `1. Nome - endereço` | `1. Gabriela - Hotel Radisson Vila Olímpia` |
+| `cr40f_endereodesada` | texto | uma linha por passageiro: `1. Nome - endereço`. Saída no Aeroporto de Guarulhos → dados do voo na mesma linha (ver "Observações e dados de voo") | `1. Gabriela - Hotel Radisson Vila Olímpia` · `1. Alvadi - Aeroporto de Guarulhos - Voo LA 8127` |
 | `cr40f_destino` | texto | destino; vários → `1 - …\n2 - …` | `Aerop. Guarulhos` |
 | `cr40f_trajeto` | texto curto | `Origem / Destino` | `SJCampos / Aerop. Guarulhos` |
 | `cr40f_tipodeveiculo` | choice | ver tabela | `202410001` |
 | `cr40f_tipodoservico` | choice | ver tabela | `202410009` |
 | `cr40f_status` | choice | **`202410004` (Solicitado)**; outro status só com pedido explícito | |
 | `new_categoriadoitem` | choice | **sempre `100000000` (Serviço)** | |
-| `cr40f_obsdeoperao` | texto | instruções para a operação/motorista | |
-| `cr40f_observaointerna` | texto | `Criado via Claude (skill assistente-betinhos)` + observações internas | |
+| `cr40f_obsdeoperao` | texto | **visível aos motoristas**: só o que ajuda a executar o serviço. Sem preferências do passageiro e sem dados do voo de saída em GRU | `Alinhar endereço de destino com o pax` |
+| `cr40f_observaointerna` | texto | **só a gestão vê**: `Criado via Claude (skill assistente-betinhos)` + preferências do passageiro + pendências da gestão | `Criado via Claude (skill assistente-betinhos). Pax prefere motorista Amadeu.` |
 | `cr40f_iachaveidempotencia` | texto (180) | chave única do pedido | `claude:20261002:0730:gabriela:kq7m` |
 | `cr40f_formadepagamento` | choice | só se informado | |
 | `cr40f_cr` | texto | centro de custo, só se informado | |
@@ -43,9 +43,24 @@ Metadata conferida em DEV e PROD em 01/10/2026.
 | `cr40f_geral` | lookup `cr40f_reservadeveculos` | GUID da reserva criada | `{"relatedTable":"cr40f_reservadeveculos","recordId":"<guid>"}` |
 | `cr40f_bancodedados` | lookup `cr40f_bancodedados` | GUID do passageiro no cadastro (obrigatório) | `{"relatedTable":"cr40f_bancodedados","recordId":"<guid>"}` |
 | `cr40f_ordemdeselecao` | inteiro | ordem de embarque: 1, 2, 3… | `1` |
-| `new_enderecodesaidacolunaservicosporpassageiro` | texto | endereço de saída desse passageiro | `Hotel Radisson Vila Olímpia` |
+| `new_enderecodesaidacolunaservicosporpassageiro` | texto | endereço de saída desse passageiro (com os dados do voo se a saída for o Aeroporto de Guarulhos) | `Hotel Radisson Vila Olímpia` · `Aeroporto de Guarulhos - Voo LA 8127` |
 
 **Não envie `cr40f_id`** do vínculo: é numeração automática (ex.: `37811`).
+
+## Observações e dados de voo
+
+**Quem vê cada campo**
+- `cr40f_obsdeoperao` → motoristas e operação.
+- `cr40f_observaointerna` → só a gestão.
+
+**Onde vai cada informação**
+- Preferências do passageiro (motorista preferido, `cr40f_preferenciasdopassageiro` do cadastro ou dito no pedido) → **só** observação interna. Nunca na obs. de operação.
+- Pendência que o motorista pode resolver na hora (ex.: alinhar destino com o pax) → obs. de operação **e** observação interna (`Pendente: …`).
+- Pendência só da gestão → observação interna.
+
+**Dados de voo**
+- **Saída no Aeroporto de Guarulhos**: os dados do voo vão no endereço de saída, ao lado do aeroporto (`cr40f_endereodesada` e `new_enderecodesaidacolunaservicosporpassageiro`), **não** na obs. de operação. Ex.: `1. Alvadi - Aeroporto de Guarulhos - Voo LA 8127`. Sem dados → `Aeroporto de Guarulhos - Dados do voo pendentes` e peça os dados no passo 1.
+- **Aeroporto de Guarulhos como destino**: não registre nem peça dados do voo (horário é agendado).
 
 ## Choices
 
